@@ -1,0 +1,50 @@
+package com.project.FitSync;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.project.FitSync.model.Activity;
+import com.project.FitSync.model.User;
+import jakarta.persistence.*;
+import lombok.Data;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+
+import javax.lang.model.element.RecordComponentElement;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+@Entity
+@Data
+public class Recommendation {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String type;
+
+    @Column(length = 2000)
+    private String reccomendations;
+
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(columnDefinition = "json")
+    private List<String> suggestions;
+
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(columnDefinition = "json")
+    private List<String> improvements;
+
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(columnDefinition = "json")
+    private List<String> safety;
+
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name= "uesr_id", nullable = false,foreignKey = @ForeignKey(name ="fk_recommendation_user"))
+    private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name= "activity_id", nullable = false,foreignKey = @ForeignKey(name ="fk_recommendation_activity"))
+    private Activity activity;
+}
