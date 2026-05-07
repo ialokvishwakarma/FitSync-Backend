@@ -1,16 +1,11 @@
-package com.project.FitSync;
+package com.project.FitSync.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.project.FitSync.model.Activity;
-import com.project.FitSync.model.User;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
-import javax.lang.model.element.RecordComponentElement;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity

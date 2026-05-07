@@ -1,14 +1,11 @@
 package com.project.FitSync.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.project.FitSync.Recommendation;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
-import org.springframework.cglib.core.Local;
 
-import java.sql.SQLType;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;

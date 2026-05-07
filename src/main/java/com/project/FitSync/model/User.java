@@ -2,7 +2,6 @@ package com.project.FitSync.model;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.project.FitSync.Recommendation;
 import jakarta.persistence.*;
 import lombok.Data;
 
