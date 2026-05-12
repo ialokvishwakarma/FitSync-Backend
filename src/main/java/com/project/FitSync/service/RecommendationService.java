@@ -41,9 +41,14 @@ public class RecommendationService {
             return ResponseEntity.ok(recommendationRepository.save(recommendation));
     }
 
-    public List<RecommendationResponse> getRecommendation(Long userId) {
+    public List<RecommendationResponse> getRecommendationByUser(Long userId) {
             List<Recommendation> recommendation = recommendationRepository.findByUserId(userId);
             return toResponseList(recommendation);
+    }
+
+    public List<RecommendationResponse> getRecommendationByActivity(Long activityId) {
+        List<Recommendation> recommendation = recommendationRepository.findByActivityId(activityId);
+        return toResponseList(recommendation);
     }
 
     public RecommendationResponse toResponse(Recommendation recommendation){

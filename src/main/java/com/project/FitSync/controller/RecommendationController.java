@@ -4,7 +4,6 @@ import com.project.FitSync.dto.RecommendationRequest;
 import com.project.FitSync.dto.RecommendationResponse;
 import com.project.FitSync.model.Recommendation;
 import com.project.FitSync.service.RecommendationService;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,8 +21,14 @@ public class RecommendationController {
         return (recommendationService.generateRecommendation(recommendationRequest));
     }
 
-    @GetMapping("/{userId}")
-    public ResponseEntity<List<RecommendationResponse>> getRecommendation(@PathVariable Long userId){
-        return ResponseEntity.ok(recommendationService.getRecommendation(userId));
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<RecommendationResponse>> getRecommendationByUserId(@PathVariable Long userId){
+        return ResponseEntity.ok(recommendationService.getRecommendationByUser(userId));
     }
+
+    @GetMapping("/activity/{activityId}")
+    public ResponseEntity<List<RecommendationResponse>> getRecommendationByActivityId(@PathVariable Long activityId){
+        return ResponseEntity.ok(recommendationService.getRecommendationByActivity(activityId));
+    }
+
 }
