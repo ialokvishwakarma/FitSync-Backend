@@ -5,6 +5,7 @@ import com.project.FitSync.dto.LoginResponse;
 import com.project.FitSync.dto.UserRequest;
 import com.project.FitSync.dto.UserResponse;
 import com.project.FitSync.model.User;
+import com.project.FitSync.model.UserRole;
 import com.project.FitSync.repository.UserRepository;
 import com.project.FitSync.security.JwtUtils;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +24,9 @@ public class UserService {
     private final JwtUtils jwtUtils;
 
     public UserResponse register(UserRequest userRequest) {
+        UserRole role = userRequest.getRole() !=null ? userRequest.getRole() : UserRole.USER;
         User user = modelMapper.map(userRequest,User.class);
+        user.setRole(role);
         user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
         userRepository.save(user);
         return modelMapper.map(user, UserResponse.class);

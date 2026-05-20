@@ -32,7 +32,8 @@ public class AuthController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/api/auth/admin/dashboard")
+    // for testing ADMIN role access
+    @GetMapping("/admin/dashboard")
     public String dashBoard(){
         return "At the dashboard page";
     }
