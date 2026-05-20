@@ -7,6 +7,8 @@ import com.project.FitSync.dto.UserRequest;
 import com.project.FitSync.dto.UserResponse;
 import com.project.FitSync.model.User;
 import com.project.FitSync.service.UserService;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,12 +23,12 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UserResponse> registerUser(@RequestBody UserRequest userRequest){
+    public ResponseEntity<UserResponse> registerUser(@Valid @RequestBody UserRequest userRequest){
         return ResponseEntity.ok(userService.register(userRequest));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest){
+    public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest loginRequest){
         LoginResponse response = userService.login(loginRequest);
         if(response==null) return ResponseEntity.status(401).build();
         return ResponseEntity.ok(response);
