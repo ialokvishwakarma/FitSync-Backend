@@ -1,15 +1,14 @@
 package com.project.FitSync.controller;
 
 
+import com.project.FitSync.dto.LoginRequest;
+import com.project.FitSync.dto.LoginResponse;
 import com.project.FitSync.dto.UserRequest;
 import com.project.FitSync.dto.UserResponse;
 import com.project.FitSync.model.User;
 import com.project.FitSync.service.UserService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -24,6 +23,18 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<UserResponse> registerUser(@RequestBody UserRequest userRequest){
         return ResponseEntity.ok(userService.register(userRequest));
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest){
+        LoginResponse response = userService.login(loginRequest);
+        if(response==null) return ResponseEntity.status(401).build();
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/api/auth/admin/dashboard")
+    public String dashBoard(){
+        return "At the dashboard page";
     }
 
 
