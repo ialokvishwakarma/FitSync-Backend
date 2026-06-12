@@ -4,6 +4,7 @@ import com.project.FitSync.dto.LoginRequest;
 import com.project.FitSync.dto.LoginResponse;
 import com.project.FitSync.dto.UserRequest;
 import com.project.FitSync.dto.UserResponse;
+import com.project.FitSync.exceptions.UserNotFoundException;
 import com.project.FitSync.model.User;
 import com.project.FitSync.model.UserRole;
 import com.project.FitSync.repository.UserRepository;
@@ -35,7 +36,9 @@ public class UserService {
 
     public LoginResponse login(LoginRequest loginRequest) {
         User user = userRepository.findByEmail(loginRequest.getEmail());
-        if(user == null) return null;
+        if(user == null){
+            throw new UserNotFoundException("User not found with email : ",loginRequest.getEmail() );
+        }
         if(!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) return null;
 
         String token = jwtUtils.generateTokenFromEmail(user.getEmail(),user.getRole().toString());
