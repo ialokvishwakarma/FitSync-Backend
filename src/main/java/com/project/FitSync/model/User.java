@@ -44,6 +44,10 @@ public class User {
     @JsonIgnore
     private List<Activity> activities = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user", cascade =  CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<Goal> goals = new ArrayList<>();
+
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private List<Recommendation> recommendations = new ArrayList<>();

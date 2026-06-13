@@ -32,7 +32,6 @@ public class ActivityService {
         Activity activity = modelMapper.map(activityRequest,Activity.class);
         activity.setId(null);
         activity.setUser(user);
-        System.out.println(activity);
         Activity savedActivity = activityRepository.save(activity);
         return modelMapper.map(savedActivity,ActivityResponse.class);
     }
