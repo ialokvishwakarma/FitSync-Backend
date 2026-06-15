@@ -19,9 +19,6 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class GoalRequestDTO {
-    @NotNull
-    private Long userID;
-
     @Length(max = 15)
     private String title;
 

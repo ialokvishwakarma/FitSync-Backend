@@ -16,9 +16,6 @@ import java.util.Map;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ActivityRequest {
-    @NotNull
-    private Long userId;
-
     @Positive
     private int duration;
     @Positive

@@ -3,6 +3,7 @@ package com.project.FitSync.service;
 import com.project.FitSync.dto.ActivityRequest;
 import com.project.FitSync.dto.ActivityResponse;
 import com.project.FitSync.dto.ActivityUpdateRequestDTO;
+import com.project.FitSync.exceptions.AccessDeniedExceptionUser;
 import com.project.FitSync.exceptions.ActivityNotFoundException;
 import com.project.FitSync.exceptions.UserNotFoundException;
 import com.project.FitSync.model.Activity;
@@ -11,6 +12,7 @@ import com.project.FitSync.repository.ActivityRepository;
 import com.project.FitSync.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.modelmapper.ModelMapper;
 
@@ -25,10 +27,10 @@ public class ActivityService {
     private final ModelMapper modelMapper;
 
 
-    public ActivityResponse add(ActivityRequest activityRequest) {
-        User user = userRepository.findById(activityRequest.getUserId()).orElseThrow(
-                () -> new UserNotFoundException("User not found with Id : ",activityRequest.getUserId())
-        );
+    public ActivityResponse add(ActivityRequest activityRequest, Authentication authentication ) {
+        String email = authentication.getName();
+        User user = userRepository.findByEmail(email);
+
         Activity activity = modelMapper.map(activityRequest,Activity.class);
         activity.setId(null);
         activity.setUser(user);
@@ -36,13 +38,13 @@ public class ActivityService {
         return modelMapper.map(savedActivity,ActivityResponse.class);
     }
 
-    public List<ActivityResponse> findByUser(Long id) {
-        User user = userRepository.findById(id).orElseThrow(
-                ()-> new UserNotFoundException("User not found with Id : ",id)
-        );
-        List<Activity> activities = activityRepository.findByUserId(id);
+    public List<ActivityResponse> findByUser(Authentication authentication) {
+        String email = authentication.getName();
+        User user = userRepository.findByEmail(email);
+
+        List<Activity> activities = activityRepository.findByUserId(user.getId());
         if(activities.isEmpty()){
-            throw new ActivityNotFoundException("Activity not found with Id : ",id);
+            throw new ActivityNotFoundException("Activity not found with Id : ",user.getId());
         }
 
         return activities.stream()
@@ -51,19 +53,28 @@ public class ActivityService {
 
     }
 
-    public void deleteActivityById(Long id) {
+    public void deleteActivityById(Long id,Authentication authentication) {
+        String email = authentication.getName();
+        User user = userRepository.findByEmail(email);
         Activity activity = activityRepository.findById(id).orElseThrow(
                 ()-> new ActivityNotFoundException("Activity not found with Id : ",id)
         );
-                activityRepository.deleteById(id);
+        if(!activity.getUser().getId().equals(user.getId())){
+            throw new AccessDeniedExceptionUser("Access Denied");
+        }
+                activityRepository.deleteById(user.getId());
 
     }
 
-    public ActivityResponse updateActivity(ActivityUpdateRequestDTO updateRequestDTO, Long id) {
+    public ActivityResponse updateActivity(Long id,ActivityUpdateRequestDTO updateRequestDTO, Authentication authentication) {
+        String email = authentication.getName();
+        User user = userRepository.findByEmail(email);
         Activity activity = activityRepository.findById(id).orElseThrow(
                 ()-> new ActivityNotFoundException("Activity not found with Id : ",id)
         );
-
+        if(!activity.getUser().getId().equals(user.getId())){
+            throw new AccessDeniedExceptionUser("Access Denied");
+        }
         activity.setDuration(updateRequestDTO.getDuration());
         activity.setType(updateRequestDTO.getType());
         activity.setStartTime(updateRequestDTO.getStartTime());

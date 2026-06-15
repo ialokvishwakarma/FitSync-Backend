@@ -23,11 +23,13 @@ import java.util.Map;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ActivityResponse {
+    private Long userId;
     private Long id;
 
-    private UserResponse user;
+//    private UserResponse user;
 
     private int duration;
+    private ActivityType type;
     private int caloriesBurned;
     private Instant startTime;
     private Instant endTime;

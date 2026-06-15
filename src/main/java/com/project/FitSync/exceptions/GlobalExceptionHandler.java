@@ -4,6 +4,7 @@ package com.project.FitSync.exceptions;
 import com.project.FitSync.dto.ErrorResponseDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.web.server.authorization.HttpStatusServerAccessDeniedHandler;
 import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -66,4 +67,49 @@ public class GlobalExceptionHandler {
                 response,
                 HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(GoalNotFoundException.class)
+    public ResponseEntity<ErrorResponseDTO> handleGoalNotFound(GoalNotFoundException ex){
+        ErrorResponseDTO response = ErrorResponseDTO.builder()
+                .timeStamp(LocalDateTime.now())
+                .status(HttpStatus.NOT_FOUND.value())
+                .message(ex.getMessage())
+                .error("GOAL_NOT_FOUND")
+                .build();
+        return new ResponseEntity<>(
+                response,
+                HttpStatus.NOT_FOUND
+        );
+    }
+
+    @ExceptionHandler(AccessDeniedExceptionUser.class)
+    public ResponseEntity<ErrorResponseDTO> handleAccess(AccessDeniedExceptionUser ex){
+        ErrorResponseDTO response = ErrorResponseDTO.builder()
+                .timeStamp(LocalDateTime.now())
+                .status(HttpStatus.FORBIDDEN.value())
+                .message(ex.getMessage())
+                .error("Access Denied")
+                .build();
+        return new ResponseEntity<>(
+                response,
+                HttpStatus.FORBIDDEN
+        );
+    }
+
+    @ExceptionHandler(WrongPasswordException.class)
+    public ResponseEntity<ErrorResponseDTO> wrongPassword(WrongPasswordException ex){
+        ErrorResponseDTO response = ErrorResponseDTO.builder()
+                .timeStamp(LocalDateTime.now())
+                .status(HttpStatus.UNAUTHORIZED.value())
+                .message(ex.getMessage())
+                .error("WRONG_PASSWORD")
+                .build();
+        return new ResponseEntity<>(
+                response,
+                HttpStatus.UNAUTHORIZED
+        );
+    }
+
+
+
 }
