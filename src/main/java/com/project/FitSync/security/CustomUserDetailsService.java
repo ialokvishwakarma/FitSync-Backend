@@ -1,6 +1,7 @@
 package com.project.FitSync.security;
 
 import com.project.FitSync.dto.UserResponse;
+import com.project.FitSync.exceptions.UserNotFoundException;
 import com.project.FitSync.model.User;
 import com.project.FitSync.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +20,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = userRepository.findByEmail(email);
         if(user == null){
-            throw new RuntimeException("User not found : "+email);
+            throw new UserNotFoundException("User not found with email : ",email);
         }
         return org.springframework.security.core.userdetails.User.builder()
                 .username(user.getEmail())
