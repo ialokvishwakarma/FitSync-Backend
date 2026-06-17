@@ -2,6 +2,7 @@ package com.project.FitSync.exceptions;
 
 
 import com.project.FitSync.dto.ErrorResponseDTO;
+import com.project.FitSync.model.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.web.server.authorization.HttpStatusServerAccessDeniedHandler;
@@ -107,6 +108,20 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(
                 response,
                 HttpStatus.UNAUTHORIZED
+        );
+    }
+
+    @ExceptionHandler(UserAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponseDTO> userAlreadyExists(UserAlreadyExistsException ex){
+        ErrorResponseDTO response = ErrorResponseDTO.builder()
+                .timeStamp(LocalDateTime.now())
+                .status(HttpStatus.CONFLICT.value())
+                .message(ex.getMessage())
+                .error("USER_ALREADY_EXIST")
+                .build();
+        return new ResponseEntity<>(
+                response,
+                HttpStatus.CONFLICT
         );
     }
 

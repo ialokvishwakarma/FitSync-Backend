@@ -6,9 +6,9 @@ import com.project.FitSync.dto.ActivityUpdateRequestDTO;
 import com.project.FitSync.exceptions.AccessDeniedExceptionUser;
 import com.project.FitSync.exceptions.ActivityNotFoundException;
 import com.project.FitSync.exceptions.UserNotFoundException;
-import com.project.FitSync.model.Activity;
-import com.project.FitSync.model.User;
+import com.project.FitSync.model.*;
 import com.project.FitSync.repository.ActivityRepository;
+import com.project.FitSync.repository.GoalRepository;
 import com.project.FitSync.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
@@ -25,6 +25,7 @@ public class ActivityService {
     private final ActivityRepository activityRepository;
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
+    private final GoalRepository goalRepository;
 
 
     public ActivityResponse add(ActivityRequest activityRequest, Authentication authentication ) {
@@ -35,6 +36,7 @@ public class ActivityService {
         activity.setId(null);
         activity.setUser(user);
         Activity savedActivity = activityRepository.save(activity);
+        updateGoalProgress(user.getId(), savedActivity.getType());
         return modelMapper.map(savedActivity,ActivityResponse.class);
     }
 
@@ -81,8 +83,24 @@ public class ActivityService {
         activity.setCaloriesBurned(updateRequestDTO.getCaloriesBurned());
         activity.setEndTime(updateRequestDTO.getEndTime());
         activity.setAdditionalMetrics(updateRequestDTO.getAdditionalMetrics());
-
         Activity updated = activityRepository.save(activity);
+        updateGoalProgress(user.getId(), updated.getType());
         return modelMapper.map(updated,ActivityResponse.class);
+    }
+
+    public void updateGoalProgress(Long userId, ActivityType type){
+        List<Goal> goals = goalRepository.findByUserIdAndType(userId,type);
+
+        double totalProgress = switch (type){
+            case RUNNING, WALKING, CYCLING -> activityRepository.sumDistanceByUserIdAndType(userId,type);
+            case YOGA, WEIGHT_TRAINING, STRETCHING, SWIMMING, CARDIO, OTHER -> activityRepository.sumCaloriesByUserIdAndType(userId,type);
+            default ->  activityRepository.sumDurationByUserIdAndType(userId,type);
+        };
+        for (Goal goal : goals){
+            goal.setTotalProgress(totalProgress);
+            if(totalProgress>= goal.getTargetValue()) goal.setStatus(GoalStatus.DONE);
+            else goal.setStatus(GoalStatus.IN_PROGRESS);
+            goalRepository.save(goal);
+        }
     }
 }

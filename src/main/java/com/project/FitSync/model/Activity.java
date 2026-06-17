@@ -32,6 +32,7 @@ public class Activity {
 
     private int duration;
     private int caloriesBurned;
+    private int distance;
 
 
     private Instant startTime;

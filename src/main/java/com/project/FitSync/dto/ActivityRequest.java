@@ -20,6 +20,8 @@ public class ActivityRequest {
     private int duration;
     @Positive
     private int caloriesBurned;
+    @Positive
+    private int distance;
 
     @NotNull
     private Instant startTime;

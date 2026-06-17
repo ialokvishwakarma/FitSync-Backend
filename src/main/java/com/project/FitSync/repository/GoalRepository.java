@@ -1,5 +1,6 @@
 package com.project.FitSync.repository;
 
+import com.project.FitSync.model.ActivityType;
 import com.project.FitSync.model.Goal;
 import jakarta.validation.Valid;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,4 +12,6 @@ import java.util.List;
 public interface GoalRepository extends JpaRepository<Goal, Long> {
 
     List<Goal> findByUserId(@Valid Long id);
+
+    List<Goal> findByUserIdAndType(Long id, ActivityType type);
 }

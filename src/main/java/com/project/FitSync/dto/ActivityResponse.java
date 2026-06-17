@@ -5,6 +5,7 @@ import com.project.FitSync.model.ActivityType;
 import com.project.FitSync.model.Recommendation;
 import com.project.FitSync.model.User;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -28,8 +29,9 @@ public class ActivityResponse {
 
 //    private UserResponse user;
 
-    private int duration;
     private ActivityType type;
+    private int duration;
+    private int distance;
     private int caloriesBurned;
     private Instant startTime;
     private Instant endTime;

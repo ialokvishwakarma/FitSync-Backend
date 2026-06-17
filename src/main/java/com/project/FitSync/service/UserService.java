@@ -4,6 +4,7 @@ import com.project.FitSync.dto.LoginRequest;
 import com.project.FitSync.dto.LoginResponse;
 import com.project.FitSync.dto.UserRequest;
 import com.project.FitSync.dto.UserResponse;
+import com.project.FitSync.exceptions.UserAlreadyExistsException;
 import com.project.FitSync.exceptions.UserNotFoundException;
 import com.project.FitSync.exceptions.WrongPasswordException;
 import com.project.FitSync.model.User;
@@ -27,7 +28,11 @@ public class UserService {
 
     public UserResponse register(UserRequest userRequest) {
         UserRole role = userRequest.getRole() !=null ? userRequest.getRole() : UserRole.USER;
-        User user = modelMapper.map(userRequest,User.class);
+        User userCheck = userRepository.findByEmail(userRequest.getEmail());
+        if(userCheck!=null){
+        throw new UserAlreadyExistsException("User already exists with  this email : ");
+        }
+        User user = modelMapper.map(userRequest, User.class);
         user.setRole(role);
         user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
         userRepository.save(user);

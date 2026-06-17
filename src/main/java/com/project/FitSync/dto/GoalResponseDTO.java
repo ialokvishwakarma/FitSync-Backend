@@ -22,6 +22,7 @@ public class GoalResponseDTO {
     private ActivityType type;
     private GoalStatus status;
     private double targetValue;
+    private double totalProgress;
     private LocalDate startDate;
     private LocalDate endDate;
 }

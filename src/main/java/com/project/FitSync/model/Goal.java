@@ -15,27 +15,29 @@ import java.time.LocalDate;
 public class Goal {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        private Long id;
 
-    private String title;
+        private String title;
 
-    private String description;
+        private String description;
 
-    @Enumerated(EnumType.STRING)
-    private ActivityType type;
+        @Enumerated(EnumType.STRING)
+        private ActivityType type;
 
-    @Enumerated(EnumType.STRING)
-    private GoalStatus status = GoalStatus.PENDING;
+        @Enumerated(EnumType.STRING)
+        private GoalStatus status = GoalStatus.PENDING;
 
-    private double targetValue;
+        private double targetValue;
 
-
-    private LocalDate startDate;
-
-    private LocalDate endDate;
+        private double totalProgress;
 
 
-    @ManyToOne
-    private User user;
+        private LocalDate startDate;
+
+        private LocalDate endDate;
+
+
+        @ManyToOne
+        private User user;
 }

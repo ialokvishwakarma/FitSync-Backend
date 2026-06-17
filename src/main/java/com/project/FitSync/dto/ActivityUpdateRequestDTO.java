@@ -18,6 +18,8 @@ public class ActivityUpdateRequestDTO {
     private int duration;
     @Positive
     private int caloriesBurned;
+    @Positive
+    private int distance;
 
 
     private Instant startTime;
