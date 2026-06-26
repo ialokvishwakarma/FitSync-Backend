@@ -1,6 +1,6 @@
 package com.project.FitSync.dto;
 
-import com.project.FitSync.model.RefreshToken;
+import jdk.jfr.Name;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class LoginResponse {
-    private String token;
-    private String refreshToken;
+public class RefreshResponse {
+    private String accessToken;
 }

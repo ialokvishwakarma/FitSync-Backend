@@ -7,8 +7,10 @@ import com.project.FitSync.dto.UserResponse;
 import com.project.FitSync.exceptions.UserAlreadyExistsException;
 import com.project.FitSync.exceptions.UserNotFoundException;
 import com.project.FitSync.exceptions.WrongPasswordException;
+import com.project.FitSync.model.RefreshToken;
 import com.project.FitSync.model.User;
 import com.project.FitSync.model.UserRole;
+import com.project.FitSync.repository.RefreshTokenRepository;
 import com.project.FitSync.repository.UserRepository;
 import com.project.FitSync.security.JwtUtils;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +27,8 @@ public class UserService {
     private final ModelMapper modelMapper;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtils jwtUtils;
+    private final RefreshTokenService refreshTokenService;
+    private final RefreshTokenRepository refreshTokenRepository;
 
     public UserResponse register(UserRequest userRequest) {
         UserRole role = userRequest.getRole() !=null ? userRequest.getRole() : UserRole.USER;
@@ -48,12 +52,15 @@ public class UserService {
         if(!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())){
             throw new WrongPasswordException("Password is not matched");
         }
-
+        RefreshToken refreshToken = refreshTokenRepository.findByUserId(user.getId());
+        if(refreshToken==null) refreshToken = refreshTokenService.createRefreshToken(user.getEmail());
+        refreshTokenRepository.delete(refreshToken);
+        RefreshToken newRefreshToken = refreshTokenService.createRefreshToken(user.getEmail());
         String token = jwtUtils.generateTokenFromEmail(user.getEmail(),user.getRole().toString());
         LoginResponse loginResponse = new LoginResponse();
         loginResponse.setToken(token);
+        loginResponse.setRefreshToken(newRefreshToken.getToken());
         modelMapper.map(user,loginResponse);
         return loginResponse;
     }
-
 }

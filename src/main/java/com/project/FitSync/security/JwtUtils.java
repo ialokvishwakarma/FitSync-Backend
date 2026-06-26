@@ -31,7 +31,7 @@ public class JwtUtils {
     }
 
     public String generateTokenFromEmail(String email,String role){
-        System.out.println("JWT SECRET USED (generate): " + jwtSecret);
+//        System.out.println("JWT SECRET USED (generate): " + jwtSecret);
         return Jwts.builder()
                 .setSubject(email)
                 .claim("roles",role)
