@@ -125,6 +125,20 @@ public class GlobalExceptionHandler {
         );
     }
 
+    @ExceptionHandler(RefreshNotFoundException.class)
+    public ResponseEntity<ErrorResponseDTO> refreshTokenNotFound(RefreshNotFoundException ex){
+        ErrorResponseDTO response = ErrorResponseDTO.builder()
+                .timeStamp(LocalDateTime.now())
+                .status(HttpStatus.NOT_FOUND.value())
+                .message(ex.getMessage())
+                .error("REFRESH_TOKEN_NOT_FOUND")
+                .build();
+        return new ResponseEntity<>(
+                response,
+                HttpStatus.NOT_FOUND
+        );
+    }
+
 
 
 }
