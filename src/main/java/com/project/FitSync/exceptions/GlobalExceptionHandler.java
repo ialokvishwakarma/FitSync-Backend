@@ -139,6 +139,20 @@ public class GlobalExceptionHandler {
         );
     }
 
+    @ExceptionHandler(UnSupportedOAuthProvideException.class)
+    public ResponseEntity<ErrorResponseDTO> unSupportedOAuth2Provider(UnSupportedOAuthProvideException ex){
+        ErrorResponseDTO response = ErrorResponseDTO.builder()
+                .timeStamp(LocalDateTime.now())
+                .status(HttpStatus.FORBIDDEN.value())
+                .message(ex.getMessage())
+                .error("UNSUPPORTED_OAUTH2_PROVIDER")
+                .build();
+        return new ResponseEntity<>(
+                response,
+                HttpStatus.NOT_FOUND
+        );
+    }
+
 
 
 }

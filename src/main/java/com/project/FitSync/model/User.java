@@ -39,6 +39,12 @@ public class User {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
+    private String providerId;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private AuthProviderType providerType = AuthProviderType.EMAIL;
+
     // Database relationship between tables
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore

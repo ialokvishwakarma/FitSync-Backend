@@ -25,12 +25,16 @@ public class RefreshTokenService {
 
 
     public RefreshToken createRefreshToken(String email){
-        var token = new RefreshToken();
+//        var token = new RefreshToken();
         User user = userRepository.findByEmail(email);
         if(user==null){
             throw new UserNotFoundException("User not found");
         }
-        token.setUser(userRepository.findByEmail(email));
+        RefreshToken token = refreshTokenRepository.findByUser(user);
+        if(token == null){
+            token = new RefreshToken();
+            token.setUser(user);
+        }
         token.setExpirationTime(Instant.now().plusMillis(refreshTokenDuration));
         token.setToken(UUID.randomUUID().toString());
         return refreshTokenRepository.save(token);

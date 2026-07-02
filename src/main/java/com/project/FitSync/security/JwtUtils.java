@@ -1,6 +1,8 @@
 package com.project.FitSync.security;
 
 
+import com.project.FitSync.exceptions.UnSupportedOAuthProvideException;
+import com.project.FitSync.model.AuthProviderType;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -8,6 +10,7 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
@@ -77,5 +80,26 @@ public class JwtUtils {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    public AuthProviderType getProviderTypeFromRegistrationId(String registrationId){
+        return
+                switch (registrationId.toLowerCase()) {
+                    case "google" -> AuthProviderType.GOOGLE;
+                    case "github" -> AuthProviderType.GITHUB;
+                    case "facebook" -> AuthProviderType.FACEBOOK;
+                    default ->
+                            throw new UnSupportedOAuthProvideException("Unsupported OAuth2 Provider" + registrationId);
+                };
+    }
+
+    public String getProviderIdFromOAuth2User(OAuth2User oAuth2User, String registrationId) {
+        String providerId = switch (registrationId.toLowerCase()){
+            case "google" -> oAuth2User.getAttribute("sub");
+            case "github" -> oAuth2User.getAttribute("id");
+            default -> throw new UnSupportedOAuthProvideException("Unsupported OAuth2 Provider");
+        };
+        if(providerId==null || providerId.isBlank()) throw new IllegalArgumentException("Unable to determine provider Id for OAuth2 Login");
+        return providerId;
     }
 }

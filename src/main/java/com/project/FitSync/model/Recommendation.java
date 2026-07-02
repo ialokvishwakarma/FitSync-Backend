@@ -43,7 +43,7 @@ public class Recommendation {
     private LocalDateTime updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name= "uesr_id", nullable = false,foreignKey = @ForeignKey(name ="fk_recommendation_user"))
+    @JoinColumn(name= "user_id", nullable = false,foreignKey = @ForeignKey(name ="fk_recommendation_user"))
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
