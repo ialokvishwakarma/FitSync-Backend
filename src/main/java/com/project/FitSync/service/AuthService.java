@@ -16,14 +16,14 @@ import com.project.FitSync.repository.UserRepository;
 import com.project.FitSync.security.JwtUtils;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class UserService {
+public class AuthService
+{
 
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;

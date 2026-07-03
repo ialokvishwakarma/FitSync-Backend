@@ -43,7 +43,7 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private AuthProviderType providerType = AuthProviderType.EMAIL;
+    private AuthProviderType providerType;
 
     // Database relationship between tables
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL, orphanRemoval = true)
