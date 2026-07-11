@@ -15,6 +15,7 @@ import com.project.FitSync.repository.RefreshTokenRepository;
 import com.project.FitSync.repository.UserRepository;
 import com.project.FitSync.security.JwtUtils;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AuthService
 {
 
@@ -36,12 +38,14 @@ public class AuthService
         UserRole role = userRequest.getRole() !=null ? userRequest.getRole() : UserRole.USER;
         User userCheck = userRepository.findByEmail(userRequest.getEmail());
         if(userCheck!=null){
+            log.warn("Duplicate user registration attempt for email: {}",userCheck.getEmail());
         throw new UserAlreadyExistsException("User already exists with  this email : ");
         }
         User user = modelMapper.map(userRequest, User.class);
         user.setRole(role);
         user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
         userRepository.save(user);
+        log.info("User '{}' register successfully",user.getEmail());
         return modelMapper.map(user, UserResponse.class);
     }
 
@@ -49,9 +53,11 @@ public class AuthService
     public LoginResponse login(LoginRequest loginRequest) {
         User user = userRepository.findByEmail(loginRequest.getEmail());
         if(user == null){
+            log.error("User not exists with email: {}",loginRequest.getEmail());
             throw new UserNotFoundException("User not found with email : ",loginRequest.getEmail() );
         }
         if(!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())){
+            log.warn("Password not match for user: {}",loginRequest.getEmail());
             throw new WrongPasswordException("Password is not matched");
         }
         RefreshToken refreshToken = refreshTokenRepository.findByUserId(user.getId());
@@ -63,6 +69,7 @@ public class AuthService
         loginResponse.setToken(token);
         loginResponse.setRefreshToken(newRefreshToken.getToken());
         modelMapper.map(user,loginResponse);
+        log.info("User {} logged in successfully",loginRequest.getEmail());
         return loginResponse;
     }
 
@@ -71,8 +78,8 @@ public class AuthService
 //        String providerId = jwtUtils.getProviderIdFromOAuth2User(oAuth2User, registrationId);
 
 //        User user = userRepository.fingByProviderIdAndProviderType(providerId,providerType).orElse(null);
-        String email = oAuth2User.getAttribute("email");
 
+        String email = oAuth2User.getAttribute("email");
         User existingUser = userRepository.findByEmail(email);
         if(existingUser == null){
             existingUser = new User();
@@ -82,7 +89,7 @@ public class AuthService
             existingUser.setProviderType(AuthProviderType.GOOGLE);
             userRepository.save(existingUser);
         }
-
+        log.info("OAuth authentication successful for user {}",existingUser.getEmail());
         return createLoginResponse(existingUser);
     }
 

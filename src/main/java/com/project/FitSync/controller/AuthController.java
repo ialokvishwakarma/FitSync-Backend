@@ -8,6 +8,7 @@ import com.project.FitSync.security.JwtUtils;
 import com.project.FitSync.service.RefreshTokenService;
 import com.project.FitSync.service.AuthService;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
+@Slf4j
 public class AuthController {
 
     private final AuthService authService;
@@ -32,11 +34,13 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<UserResponse> registerUser(@Valid @RequestBody UserRequest userRequest){
+        log.info("Register Request");
         return ResponseEntity.ok(authService.register(userRequest));
     }
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest loginRequest){
+        log.info("Login Request");
         LoginResponse response = authService.login(loginRequest);
         if(response==null) return ResponseEntity.status(401).build();
         return ResponseEntity.ok(response);
@@ -46,6 +50,7 @@ public class AuthController {
     public ResponseEntity<RefreshResponse> refreshToken(
             @RequestBody RefreshRequest refreshRequest
             ){
+        log.info("Refresh Token Request");
         RefreshToken refreshToken = refreshTokenRepository.findByToken(refreshRequest.getRefreshToken()).orElseThrow();
 //        String refreshToken = refreshRequest.getRefreshToken();
         if(refreshTokenService.isExpired(refreshToken)){

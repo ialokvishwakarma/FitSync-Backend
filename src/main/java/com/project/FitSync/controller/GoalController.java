@@ -8,6 +8,7 @@ import com.project.FitSync.exceptions.AccessDeniedExceptionUser;
 import com.project.FitSync.service.GoalService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +18,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/goals")
+@Slf4j
 public class GoalController {
     private final GoalService goalService;
 
@@ -24,6 +26,7 @@ public class GoalController {
     public ResponseEntity<GoalResponseDTO> addGoal(@Valid
                                                        Authentication authentication,
                                                        @RequestBody GoalRequestDTO requestDTO) {
+        log.info("Add Goal Request");
         return ResponseEntity.ok(goalService.createGoal(authentication,requestDTO));
     }
 
@@ -32,6 +35,7 @@ public class GoalController {
             @Valid
             Authentication authentication
     ){
+        log.info("My Goal List Request");
         return ResponseEntity.ok(goalService.getAllGoals(authentication));
     }
 
@@ -39,6 +43,7 @@ public class GoalController {
     public ResponseEntity<Void> deleteGoal(@Valid
                                            Authentication authentication,
                                            Long id){
+        log.info("Delete Goal Request");
         goalService.delete(authentication,id);
         return ResponseEntity.noContent().build();
    }
@@ -48,6 +53,7 @@ public class GoalController {
                                                          @PathVariable  Long id,
                                                       @RequestBody UpdateGoalRequest request,
                                                       Authentication authentication){
+        log.info("Update Goal Request");
         return ResponseEntity.ok(goalService.update(id,request,authentication));
    }
 
@@ -58,6 +64,7 @@ public class GoalController {
             Authentication authentication,
             @RequestBody GoalStatusRequest statusRequest
    ){
+        log.info("Update Status Request");
         return ResponseEntity.ok(goalService.updateStatus(id,statusRequest,authentication));
    }
 

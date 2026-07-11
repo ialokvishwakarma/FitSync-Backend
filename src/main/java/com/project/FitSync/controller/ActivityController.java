@@ -7,6 +7,7 @@ import com.project.FitSync.repository.ActivityRepository;
 import com.project.FitSync.service.ActivityService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +17,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/activities")
+@Slf4j
 public class ActivityController {
 
 
@@ -26,17 +28,20 @@ public class ActivityController {
                                                             @RequestBody ActivityRequest activityRequest,
                                                             Authentication authentication
                                                         ){
+        log.info("Track Activities Request");
         return ResponseEntity.ok(activityService.add(activityRequest,authentication));
     }
 
     @GetMapping("/my-activities")
     public ResponseEntity<List<ActivityResponse>> getActivities(@Valid
                                                                 Authentication authentication){
+        log.info("My Activity List Request");
         return ResponseEntity.ok(activityService.findByUser(authentication));
     }
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteActivity(@Valid @PathVariable Long id, Authentication authentication){
+        log.info("Delete Activity Request");
         activityService.deleteActivityById(id,authentication);
         return ResponseEntity.noContent().build();
     }
@@ -46,6 +51,7 @@ public class ActivityController {
                                                                @PathVariable Long id,
                                                                @RequestBody ActivityUpdateRequestDTO updateRequestDTO,
                                                            Authentication authentication){
+        log.info("Update Activity Request");
         return ResponseEntity.ok(activityService.updateActivity(id,updateRequestDTO, authentication));
     }
 }

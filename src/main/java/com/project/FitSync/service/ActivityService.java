@@ -11,6 +11,7 @@ import com.project.FitSync.repository.ActivityRepository;
 import com.project.FitSync.repository.GoalRepository;
 import com.project.FitSync.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ActivityService {
 
     private final ActivityRepository activityRepository;
@@ -37,6 +39,7 @@ public class ActivityService {
         activity.setUser(user);
         Activity savedActivity = activityRepository.save(activity);
         updateGoalProgress(user.getId(), savedActivity.getType());
+        log.info("Activity added successfully for user: {}",authentication.getName());
         return modelMapper.map(savedActivity,ActivityResponse.class);
     }
 
@@ -46,9 +49,11 @@ public class ActivityService {
 
         List<Activity> activities = activityRepository.findByUserId(user.getId());
         if(activities.isEmpty()){
+            log.warn("Activity not present for user: {}",authentication.getName());
             throw new ActivityNotFoundException("Activity not found with Id : ",user.getId());
         }
 
+        log.info("Activity returned successfully for user: {}",authentication.getName());
         return activities.stream()
                 .map(activity -> modelMapper.map(activity, ActivityResponse.class))
                 .toList();
@@ -64,7 +69,8 @@ public class ActivityService {
         if(!activity.getUser().getId().equals(user.getId())){
             throw new AccessDeniedExceptionUser("Access Denied");
         }
-                activityRepository.deleteById(user.getId());
+        log.info("Activity deleted with id: {}",id);
+        activityRepository.deleteById(user.getId());
 
     }
 

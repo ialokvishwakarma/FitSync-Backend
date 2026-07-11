@@ -14,6 +14,7 @@ import com.project.FitSync.repository.UserRepository;
 import com.project.FitSync.security.CustomUserDetailsService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -26,6 +27,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class GoalService {
 
     private final UserRepository userRepository;
@@ -41,6 +43,7 @@ public class GoalService {
         goal.setId(null);
         goal.setUser(user);
         Goal savedGoal = goalRepository.save(goal);
+        log.info("Goal created successfully");
         return modelMapper.map(savedGoal,GoalResponseDTO.class);
     }
 
@@ -50,7 +53,7 @@ public class GoalService {
         Long userId = user.getId();
 
 
-
+        log.info("Fetching Goals");
         List<Goal> goals = goalRepository.findByUserId(user.getId());
         if(goals.isEmpty()){
             throw new GoalNotFoundException("User do not have any goals");
@@ -75,6 +78,7 @@ public class GoalService {
         }
 
         goalRepository.deleteById(id);
+        log.info("Goal Deleted");
     }
 
     public GoalResponseDTO update(Long id, UpdateGoalRequest request, Authentication authentication) {
@@ -96,6 +100,7 @@ public class GoalService {
         goal.setEndDate(request.getEndDate());
         System.out.println(request.getDescription());
         Goal updated = goalRepository.save(goal);
+        log.info("Goal Updated");
         return modelMapper.map(updated,GoalResponseDTO.class);
     }
 
