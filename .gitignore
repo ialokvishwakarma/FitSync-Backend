@@ -35,3 +35,8 @@ build/
 ## Application Properties  ##
 application.properties
 .env
+
+#Springboot logs
+
+*.logs
+logs/
