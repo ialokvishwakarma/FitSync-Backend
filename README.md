@@ -1,14 +1,14 @@
-# FitSync - A Fitness Tracking Backend Application
+# Habitude -  An AI-Powered Habit Tracking App
 
 ## Description
 
-A backend-based fitness tracking and activity management system built using Java and Spring Boot. The application provides secure REST APIs for managing users, tracking fitness activities, and generating recommendations using JWT-based authentication and Spring Security.
+A backend-based habit tracking and activity management system built using Java and Spring Boot. The application provides secure REST APIs for managing users, tracking habit and  activities, and generating recommendations using JWT-based authentication and Spring Security.
 
 ## Tech Stack
 
 * Backend: Java, Spring Boot, Spring Security, JWT
-* Database: MySQL, Spring Data JPA
-* Tools: Postman, Maven, IntelliJ IDEA
+* Database: PostgreSQL, Spring Data JPA
+* Tools: Postman, Maven, IntelliJ IDEA, Docker
 
 ## Features
 
@@ -16,7 +16,7 @@ A backend-based fitness tracking and activity management system built using Java
 * JWT-based authentication and authorization
 * Secure REST APIs
 * Activity tracking management
-* Personalized fitness recommendations
+* Personalized recommendations
 * Role-based access control using Spring Security
 * Admin dashboard APIs
 * User activity history management
